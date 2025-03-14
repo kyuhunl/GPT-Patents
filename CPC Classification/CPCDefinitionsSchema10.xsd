@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:annotation>
+		<xsd:documentation>     
+	* CPC Definitions Schema *
+	* *
+	* Definition of CPC Definitions Structure
+	* *
+	
+	* Author :  USPTO, EPO
+	* Version 1.0
+	* Last Update : 20/05/2016
+	* Contact: cpc@epo.org and/or at cpc@uspto.gov
+	* *
+	*================================================*
+	*Revision History*
+	
+  	*  CPC Definitions version v1.0 (20/05/2016)
+	
+	  - Added new element references,application-references,residual-references,moved limiting-references
+	    and informative-references to under references element. references element includes 
+		section-title, limiting-references,application-references, residual-references, informative-references
+		
+	  - Redefined synonyms-keywords element content model with section-title and a choice between 
+		section-body and group of elements abbreviations,synonyms,instead-of-words,special-meanings in that order.
+ 
+	  - Removed value "normal" from type attribute in paragraph-text element. added values "preamble" and "subheading".
+		The default value is set to "body"
+ 
+	  - Redefined class-ref as string with scheme attribute. The scheme attribute permitted values are "cpc" and "not-mapped" 
+		which is different than in CPC Scheme.
+		
+	  - Changed content model of defnition-item from xsd:all to xsd:sequence.
+	
+	*  CPC Definitions version v0.9 (16/10/14)
+	  - Added sub/sup for subscript/superscript 
+	  - Added file-name attribute to media element
+
+	*  CPC Definitions version v0.8 (17/10/12)
+	  - Added optional preferredWidth and preferredHeight attributes to media element.
+	  - Added optional preferredWidth attribute to tabel-column element.
+	
+	* CPC Definitions version v0.7
+	  - Added optional attribute scheme='not-mapped' to classification-symbol and class-ref. 
+	  - Added alt attribute to media element.
+
+	*  CPC Definitions version v0.6 
+      - Added type attribute to paragraph-text element. 
+
+	*  CPC Definitions version v0.5 
+	  - Removed unused cpc-ref
+	  - Removed 'emf' from media as it's not a supported media format. 
+	
+</xsd:documentation>
+	</xsd:annotation>
+		<xsd:element name="definitions" type="definitions-type">
+		<xsd:annotation>
+			<xsd:documentation>CPC definitions root element</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="abbreviations" type="section-body-type">
+		<xsd:annotation>
+			<xsd:documentation>Portion of Synonyms and Keywords section relating to the use of abbreviations in patent documents</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="alt" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Alternate text for an image</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="application-references" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>Application oriented reference, a form of non-limiting references in function-oriented places which point to places where their subject matter is covered if it is specially adapted, used for a particular purpose or incorporated in a larger system</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="caption" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Table caption</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="classification-symbol" type="classification-symbol-type">
+		<xsd:annotation>
+			<xsd:documentation>A CPC symbol corresponding to the classification scheme for those symbols which have an associated definition. Made up of the following consituent parts, constrained by the cpc-symbol-type
+SUBCLASS: Each class comprises one or more subclasses which are the third hierarchical level of the CPC Classification. Each subclass symbol consists of the class symbol followed by a capital letter from 'A' to 'Z' as recommended in WIPO Standard ST.8.
+MAINGROUP: Main Group comprises a subclass portion of the symbol followed by one- to four-digit number (1 to 9999) prior to the slash ("/") and the values "00" (reserved for main groups) following the slash. 
+SUBGROUP: Subgroups form subdivisions under the main groups of the CPC Classification. Each subgroup symbol comprises a subclass portion, one- to four-digit numbers prior to the slash (shared by the main group) and two- to six-digit numbers (01 to 999999) following the slash.
+		</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="classification-symbol-type">
+		<xsd:simpleContent>
+			<xsd:extension base="simple-symbol-type">
+				<xsd:attribute name="scheme"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:element name="class-ref" type="class-ref-type">
+		<xsd:annotation>
+			<xsd:documentation>An element to encapsulate a cross referenced classification symbol</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="class-ref-type">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute ref="scheme" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:simpleType name="cpc-scheme-category-type">
+		<xsd:annotation>
+			<xsd:documentation>
+				Simple type describing a list of schemes
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="cpc"/>
+			<xsd:enumeration value="not-mapped"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="date-revised" type="xsd:date">
+		<xsd:annotation>
+			<xsd:documentation>Last revised date</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="definition-item" type="definition-item-type">
+		<xsd:annotation>
+			<xsd:documentation>Entry of definition</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="definition-item-type">
+		<xsd:sequence>
+			<xsd:element ref="classification-symbol"/>
+			<xsd:element ref="definition-title" minOccurs="0"/>
+			<xsd:element ref="definition-statement" minOccurs="0"/>
+			<xsd:element ref="relationship" minOccurs="0"/>
+			<xsd:element ref="references" minOccurs="0"/>
+			<xsd:element ref="special-rules" minOccurs="0"/>
+			<xsd:element ref="glossary-of-terms" minOccurs="0"/>
+			<xsd:element ref="synonyms-keywords" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute ref="date-revised"/>
+	</xsd:complexType>
+	<xsd:element name="definition-statement" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>A definition statement which provides a detailed explanation of the subject matter appropriate for the classification place.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="definitions-type">
+		<xsd:sequence>
+			<xsd:element ref="definition-item" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute ref="publication-date" use="required"/>
+		<xsd:attribute ref="publication-type" use="required"/>
+	</xsd:complexType>
+	<xsd:element name="definition-title" type="definition-title-type">
+		<xsd:annotation>
+			<xsd:documentation>The corresponding title of the classification symbol. The definition title is a simplified version of the title provided in the scheme XML.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="definition-title-type" mixed="true">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="class-ref"/>
+			<xsd:element ref="media"/>
+			<xsd:element ref="sub"/>
+			<xsd:element ref="sup"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:attribute name="file-name" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Image file name</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="glossary-of-terms" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>Glossary of terms used in the classification scheme or the definition statement</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="id" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Image id number. Image id's are unique to the file, not the instance of the image within the definition</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="informative-references" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>A form of non-limiting references indicating the location of subject matter that could be of
+interest for searching, but which subject matter is not within the scope of the classification
+place where the reference occurs</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="instead-of-words" type="section-body-type">
+		<xsd:annotation>
+			<xsd:documentation>Portion of Synonyms and Keywords section relating to words and expressions used instead of those used in the classification scheme</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="limiting-references" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>References for scope limitation or precedence</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="list" type="list-type">
+		<xsd:annotation>
+			<xsd:documentation>List</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="list-item" type="list-item-type">
+		<xsd:annotation>
+			<xsd:documentation>Unordered list item</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="list-item-type">
+		<xsd:sequence>
+			<xsd:element ref="paragraph-text"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="list-type">
+		<xsd:sequence>
+			<xsd:element ref="list-item" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="media" type="media-type">
+		<xsd:annotation>
+			<xsd:documentation>Image used in CPC definition</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="media-extension-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="gif"/>
+			<xsd:enumeration value="jpeg"/>
+			<xsd:enumeration value="tif"/>
+			<xsd:enumeration value="bmp"/>
+			<xsd:enumeration value="png"/>
+			<xsd:enumeration value="wav"/>
+			<xsd:enumeration value="wma"/>
+			<xsd:enumeration value="wmv"/>
+			<xsd:enumeration value="mp3"/>
+			<xsd:enumeration value="unknown"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="media-type">
+		<xsd:attribute ref="id" use="required"/>
+		<xsd:attribute ref="file-name"/>
+		<xsd:attribute name="type" type="media-extension-category-type" use="required"/>
+		<xsd:attribute ref="alt"/>
+		<xsd:attribute ref="preferred-width"/>
+		<xsd:attribute ref="preferred-height"/>
+	</xsd:complexType>
+	<xsd:element name="paragraph-text" type="paragraph-text-type">
+		<xsd:annotation>
+			<xsd:documentation>Text in CPC definitions, including block text, text in table cells, or text in list items</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="paragraph-text-category-type">
+		<xsd:annotation>
+			<xsd:documentation>Distinguishes between regular paragraph text (including text in tables or lists), and text considered to be preambles or subheadings. Subheadings group together common subject matter following the subheading text. They are given emphasis through formatting in the publication. Preamble text appear in the beginning of the definition sections/subsections and contain standardized language. They are formatted in the publication using italics. Only regular paragraph text and subheading text are user-defined.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="body"/>
+			<xsd:enumeration value="preamble"/>
+			<xsd:enumeration value="subheading"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="paragraph-text-type" mixed="true">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="class-ref"/>
+			<xsd:element ref="media"/>
+			<xsd:element ref="sub"/>
+			<xsd:element ref="sup"/>
+		</xsd:choice>
+		<xsd:attribute name="type" type="paragraph-text-category-type" default="body"/>
+	</xsd:complexType>
+	<xsd:attribute name="preferred-height" type="preferred-height-width-type">
+		<xsd:annotation>
+			<xsd:documentation>Preferred height for image. Used for scaling images in the publication.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:simpleType name="preferred-height-width-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d+(\.?\d+)?(cm|px|%)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="preferred-width" type="preferred-height-width-type">
+		<xsd:annotation>
+			<xsd:documentation>Preferred width for image or table. Used for scaling images in the publication.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:simpleType name="publication-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="official"/>
+			<xsd:enumeration value="test"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="publication-date" type="xsd:date">
+		<xsd:annotation>
+			<xsd:documentation>Publication date</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="publication-type" type="publication-category-type">
+		<xsd:annotation>
+			<xsd:documentation>Official or test publications</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="references" type="references-type">
+		<xsd:annotation>
+			<xsd:documentation>References relevant for classification</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="references-type">
+		<xsd:sequence>
+			<xsd:element ref="section-title"/>
+			<xsd:element ref="limiting-references" minOccurs="0"/>
+			<xsd:element ref="application-references" minOccurs="0"/>
+			<xsd:element ref="residual-references" minOccurs="0"/>
+			<xsd:element ref="informative-references" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="relationship" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>Relationship between large subject matter areas</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="residual-references" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>Reference out of a residual place, a form of non-limiting references appearing in residual places which point to places which provide for the subject matter under consideration</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:attribute name="scheme" type="cpc-scheme-category-type">
+		<xsd:annotation>
+			<xsd:documentation>Used to indicate whether the referenced symbol is present in the CPC scheme or is not mapped</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:element name="section-body" type="section-body-type">
+		<xsd:annotation>
+			<xsd:documentation>Section body content</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="section-body-type">
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element ref="paragraph-text"/>
+			<xsd:element ref="list"/>
+			<xsd:element ref="table"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:element name="section-title" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Section title</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="section-type">
+		<xsd:sequence>
+			<xsd:element ref="section-title"/>
+			<xsd:element ref="section-body"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="simple-symbol-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-HY]([0-9][0-9])?"/>
+			<xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z]"/>
+			<xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z]([1-9]\d{0,2}/\d{2,6})"/>
+			<xsd:pattern value="[A-HY]([0-9][0-9])[A-HJ-NP-Z](2\d{3}/\d{2,6})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="special-meanings" type="section-body-type">
+		<xsd:annotation>
+			<xsd:documentation>Portion of Synonyms and Keywords section relating to words and expressions which may have special meanings in patent documents</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="special-rules" type="section-type">
+		<xsd:annotation>
+			<xsd:documentation>Special rules of classification which apply within the subclass or group</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="sub" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Subscript formatted text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="sup" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>Superscript formatted text</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="synonyms" type="section-body-type">
+		<xsd:annotation>
+			<xsd:documentation>Portion of Synonyms and Keywords section relating to words and expressions which are used as synonyms in patent documents</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="synonyms-keywords" type="synonyms-keywords-type">
+		<xsd:annotation>
+			<xsd:documentation>Synonyms and Keywords section</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="synonyms-keywords-type">
+		<xsd:sequence>
+			<xsd:element ref="section-title"/>
+			<xsd:choice>
+				<xsd:element ref="section-body"/>
+				<xsd:sequence>
+					<xsd:element ref="abbreviations" minOccurs="0"/>
+					<xsd:element ref="synonyms" minOccurs="0"/>
+					<xsd:element ref="instead-of-words" minOccurs="0"/>
+					<xsd:element ref="special-meanings" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="table" type="table-type">
+		<xsd:annotation>
+			<xsd:documentation>Simple table structure in CPC Definition</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:simpleType name="table-category-type">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="limiting-references-table"/>
+			<xsd:enumeration value="informative-references-table"/>
+			<xsd:enumeration value="glossary-table"/>
+			<xsd:enumeration value="synonyms-table"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="table-column" type="table-column-type">
+		<xsd:annotation>
+			<xsd:documentation>Table column. Table cells are represented using paragraph text. Only two-column tables are used in CPC definitions.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="table-column-type">
+		<xsd:sequence>
+			<xsd:element ref="paragraph-text"/>
+		</xsd:sequence>
+		<xsd:attribute ref="preferred-width"/>
+	</xsd:complexType>
+	<xsd:element name="table-row" type="table-row-type">
+		<xsd:annotation>
+			<xsd:documentation>Table row</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="table-row-type">
+		<xsd:sequence>
+			<xsd:element name="table-column" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="table-type">
+		<xsd:sequence>
+			<xsd:element ref="table-row" maxOccurs="unbounded"/>
+			<xsd:element ref="caption" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="type" type="table-category-type"/>
+	</xsd:complexType>
+</xsd:schema>
